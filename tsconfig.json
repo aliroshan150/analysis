@@ -3,6 +3,8 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "strict": true,
     "noImplicitOverride": true,
@@ -22,7 +24,36 @@
     "lib": [
       "ES2022",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@main/*": [
+        "src/app/features/main/*"
+      ],
+      "@oauth-dto/*": [
+        "src/app/features/oauth/models/dto/*"
+      ],
+      "@oauth-models/*": [
+        "src/app/features/oauth/models/*"
+      ],
+      "@oauth/*": [
+        "src/app/features/oauth/*"
+      ],
+      "@core/*": [
+        "src/app/features/@core/*"
+      ],
+      "@global-functions/*": [
+        "src/app/features/@shared/global-functions/*"
+      ],
+      "@shared/*": [
+        "src/app/features/@shared/*"
+      ],
+      "@environments/*": [
+        "src/environments/*"
+      ],
+      "@app/*": [
+        "src/app/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
