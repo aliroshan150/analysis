@@ -1,1 +1,34 @@
-<p>sign-up works!</p>
+@defer {
+    <mat-grid-list class="sign-up-bg"
+                   cols="24"
+                   rowHeight="100%">
+      <mat-grid-tile colspan="7"></mat-grid-tile>
+      <mat-grid-tile colspan="10">
+        <mat-card class="w-100 ">
+          <mat-card-content>
+            @if (signUpResource.error()) {
+              Error in loading form
+            } @else if (signUpResource.isLoading()) {
+              loading inputs
+            } @else if (signUpResource.hasValue()) {
+              <h1 class="text-center fs-7">{{signUpForm.form.title}}</h1>
+              <form [id]="signUpForm.form.name"
+                    [name]="signUpForm.form.name"
+                    (ngSubmit)="submitForm()">
+
+                <div class="mt-5">
+                  <button mat-stroked-button
+                          type="submit"
+                          class="w-100"
+                          [attr.form]="signUpForm.form.name">
+                    {{signUpForm.form.submitLabel}}
+                  </button>
+                </div>
+              </form>
+            }
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="7"></mat-grid-tile>
+    </mat-grid-list>
+}

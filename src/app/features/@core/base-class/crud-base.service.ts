@@ -14,15 +14,13 @@ const serialize = (obj: any) => {
   return str.join('&');
 };
 
-export const RELATIVE_API_URL = new InjectionToken<string>('api relative path');
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export abstract class CrudBaseService
   extends CoreBaseService {
 
-  @Inject(RELATIVE_API_URL) entityName: string = inject(RELATIVE_API_URL);
+  entityName: string = '';
 
   getAll = <ResponseType>(): Observable<ResponseType> => this.get<ResponseType>(this.entityName);
 

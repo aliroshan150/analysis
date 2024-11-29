@@ -1,1 +1,64 @@
 /* You can add global styles to this file, and also import other style files */
+@use "assets/style/variable" as variable;
+@use '@angular/material' as mat;
+/* Importing Bootstrap SCSS file. */
+@use 'assets/style/bootstrap/bootstrap' as bootstrap;
+@import "@angular/material/prebuilt-themes/azure-blue.css";
+
+//$header-height: 200px;
+//$footer-height: 150px;
+//$footer-space-top: 20;
+//$mobile-menu-height: 0px;
+
+html, body {
+  height: 100%;
+  font-size: 14px;
+  color: rgba(30,41,59, 1) !important;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: unset;
+}
+
+app-root {
+  display: flex;
+  flex-flow: column;
+  align-self: stretch;
+  justify-self: stretch;
+  min-height: calc(100dvh - #{variable.$mobile-menu-height});
+  max-width: calc(100% - 1px);
+
+  router-outlet {
+    flex: 0;
+    display: contents;
+  }
+
+  router-outlet + * {
+    flex: 12;
+    display: grid;
+  }
+
+  .routes {
+    flex: 1;
+    flex-grow: 30;
+    min-height: calc(100dvh - #{variable.$header-height} - #{variable.$mobile-menu-height} - #{variable.$footer-space-top} - #{variable.$footer-height});
+
+    &.no-header {
+      min-height: calc(100dvh - #{variable.$mobile-menu-height} - #{variable.$footer-space-top} - #{variable.$footer-height});
+    }
+  }
+
+  app-header {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+  }
+
+  app-footer {
+    font-size: 12px;
+    height: variable.$footer-height;
+  }
+}

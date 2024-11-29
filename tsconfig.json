@@ -44,6 +44,12 @@
       "@global-functions/*": [
         "src/app/features/@shared/global-functions/*"
       ],
+      "@shared-enums/*": [
+        "src/app/features/@shared/models/enums/*"
+      ],
+      "@shared-models/*": [
+        "src/app/features/@shared/models/*"
+      ],
       "@shared/*": [
         "src/app/features/@shared/*"
       ],

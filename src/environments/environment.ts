@@ -5,6 +5,6 @@ export const environment: EnvironmentInterface = {
   production: false,
   deployTarget: DeployTargetEnum.LOCAL,
   loggerUrl: '',
-  apiUrl: '/api/',
+  apiUrl: 'https://accounts.mail.ir/app/',
   siteUrl: '',
 };

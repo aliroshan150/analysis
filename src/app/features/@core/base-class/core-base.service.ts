@@ -1,4 +1,4 @@
-import {inject, Injectable} from '@angular/core';
+import {inject, Injectable, signal} from '@angular/core';
 import {HttpClient, HttpContext, HttpResponse} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {CoreHttpInterceptorInitialConfigType} from '@core/types';

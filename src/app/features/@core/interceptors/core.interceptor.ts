@@ -1,7 +1,9 @@
-import {HttpContextToken, HttpHeaders, HttpInterceptorFn} from '@angular/common/http';
+import {HttpContextToken, HttpErrorResponse, HttpHeaders, HttpInterceptorFn} from '@angular/common/http';
 import {environment} from '@environments/environment';
 import {OAuthService} from '@oauth/services';
 import {inject} from '@angular/core';
+import {catchError, throwError} from 'rxjs';
+import {LanguageService} from '@shared/services';
 
 
 export const API_URL = new HttpContextToken<string>(() => '');
@@ -20,16 +22,45 @@ export const coreInterceptor: HttpInterceptorFn = (req, next) => {
   const _timeout = req.context.get(TIMEOUT);
 
   const authService: OAuthService = inject(OAuthService);
+  const languageService: LanguageService = inject(LanguageService);
   let apiReq = req;
 
-  const requestParams: any = {};
+  const requestParams: any = {
+    url: apiReq.url,
+  };
   if (!req.headers.get('skip') && apiUrl) {
-    requestParams.url = `${apiUrl}${req.url}`;
+    requestParams.url = `${apiUrl}${apiReq.url}`;
   }
   if (authService.isLoggedIn) {
     // requestParams.headers = new HttpHeaders({
     //   "Authorization": authService.apiToken()
     // })
   }
-  return next(req);
+  if (languageService.currentLanguage?.value) {
+    requestParams.headers = new HttpHeaders({
+      "Accept-Language": languageService.currentLanguage?.value
+    })
+  }
+  apiReq = req.clone(requestParams);
+  return next(apiReq)
+    .pipe(
+      catchError(err => handleError(err))
+    );
 };
+
+const handleError = (error: HttpErrorResponse) => {
+  if (error.status === 0) {
+    // A client-side or network error occurred. Handle it accordingly.
+    console.error('An error occurred:', error.error);
+    if (error.error?.message === 'Failed to fetch') {
+      console.log('Connection Lost');
+    }
+  } else {
+    // The backend returned an unsuccessful response code.
+    // The response body may contain clues as to what went wrong.
+    console.error(
+      `Backend returned code ${error.status}, body was: `, error.error);
+  }
+  // Return an observable with a user-facing error message.
+  return throwError(() => error);
+}

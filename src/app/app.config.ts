@@ -2,10 +2,10 @@ import {ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDetec
 import {provideRouter, withHashLocation} from '@angular/router';
 import {routes} from './app.routes';
 import {provideAnimations} from '@angular/platform-browser/animations';
-import {RELATIVE_API_URL} from '@core/base-class/crud-base.service';
 import {OAuthService} from '@oauth/services';
-import {provideHttpClient, withInterceptors} from '@angular/common/http';
+import {provideHttpClient, withFetch, withInterceptors} from '@angular/common/http';
 import {coreInterceptor} from '@core/interceptors';
+import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 
 function initializeApp() {
   return (): Promise<void> => {
@@ -17,16 +17,13 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({eventCoalescing: true}),
     provideRouter(routes, withHashLocation()),
-    provideAnimations(),
+    provideAnimationsAsync(),
     provideAppInitializer(initializeApp()),
     provideHttpClient(
+      withFetch(),
       withInterceptors([
         coreInterceptor
       ])
-    ),
-    {
-      provide: RELATIVE_API_URL,
-      useValue: ''
-    }
+    )
   ]
 };

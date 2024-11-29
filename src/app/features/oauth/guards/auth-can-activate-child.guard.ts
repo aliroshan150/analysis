@@ -7,7 +7,8 @@ export const authCanActivateChildGuard: CanActivateChildFn = async (childRoute, 
   const router: Router = inject<Router>(Router);
   const authService: OAuthService = inject<OAuthService>(OAuthService);
   if (!authService.isLoggedIn) {
-    await router.navigate(['oauth'], {queryParams: {retUrl: state.url}});
+    // await router.navigate(['oauth'], {queryParams: {retUrl: state.url}});
+    await router.navigate(['oauth']);
     return false;
   }
   const requiredOperations = authCanActivateRoutePermissions(childRoute);

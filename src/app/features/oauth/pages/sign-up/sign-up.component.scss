@@ -1,0 +1,12 @@
+.sign-up-bg {
+  background-image: url('/assets/sign_up_bg.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: #0006;
+  background-blend-mode: darken;
+  height: 100%;
+  .bg-fade {
+    background: #ffffff80;
+  }
+}

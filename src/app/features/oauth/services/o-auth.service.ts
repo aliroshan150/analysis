@@ -1,12 +1,14 @@
 import {Injectable, signal, WritableSignal} from '@angular/core';
-import {CrudBaseService} from '@core/base-class/crud-base.service';
 import {BaseUser} from '@oauth-models/base-user';
+import {CrudBaseService} from '@core/base-class/crud-base.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OAuthService
   extends CrudBaseService {
+
+  override entityName: string = '';
 
   readonly #isLoggedIn: WritableSignal<boolean> = signal(false);
   readonly #operations: WritableSignal<Array<string>> = signal([]);

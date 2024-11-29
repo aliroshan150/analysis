@@ -1,0 +1,72 @@
+
+// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "bootstrap/scss/functions";
+
+@import "bootstrap/override_variables";
+
+// 3. Include remainder of required Bootstrap stylesheets (including any separate color mode stylesheets)
+@import "bootstrap/scss/_variables";
+@import "bootstrap/scss/_variables-dark";
+
+
+// 4. Include any default map overrides here
+
+// 5. Include remainder of required parts
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/root";
+
+
+$header-height: 200px;
+$footer-height: 45px;
+$footer-space-top: 20;
+$mobile-menu-height: 0px;
+
+$aspect-values: (
+  90: .9,
+  100: 1,
+);
+
+$font-sizes: (
+  1: $font-size-base * .25,
+  2: $font-size-base * .5,
+  3: $font-size-base * .75,
+  4: $font-size-base,
+  5: $font-size-base * 1.25,
+  6: $font-size-base * 1.5,
+  7: $font-size-base * 1.75,
+  8: $font-size-base * 2,
+  9: $font-size-base * 2,
+  10: $font-size-base * 2.25,
+  11: $font-size-base * 2.5,
+  12: $font-size-base * 2.75,
+  13: $font-size-base * 3,
+  14: $font-size-base * 3.25,
+  15: $font-size-base * 3.5,
+  16: $font-size-base * 3.75,
+  17: $font-size-base * 4,
+  18: $font-size-base * 4.25,
+  19: $font-size-base * 4.5,
+  20: $font-size-base * 4.75,
+  21: $font-size-base * 5,
+  22: $font-size-base * 5.25,
+  23: $font-size-base * 5.5,
+  24: $font-size-base * 5.75,
+  25: $font-size-base * 6,
+  26: $font-size-base * 6.25,
+  27: $font-size-base * 6.5,
+  28: $font-size-base * 6.75,
+  29: $font-size-base * 7,
+  30: $font-size-base * 7.25,
+  31: $font-size-base * 7.5,
+  32: $font-size-base * 7.75,
+  33: $font-size-base * 8,
+  34: $font-size-base * 8.25,
+  35: $font-size-base * 8.5,
+  36: $font-size-base * 8.75,
+  37: $font-size-base * 9,
+  38: $font-size-base * 9.25,
+  39: $font-size-base * 9.5,
+  40: $font-size-base * 9.75,
+  41: $font-size-base * 10,
+);

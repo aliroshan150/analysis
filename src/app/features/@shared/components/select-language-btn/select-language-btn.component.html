@@ -1,0 +1,15 @@
+<button mat-button [matMenuTriggerFor]="menu">
+  <mat-icon aria-hidden="false"
+            aria-label="Drop Down icon"
+            class="fs-5"
+            fontIcon="arrow_drop_down"></mat-icon>
+  <span>{{languages()[selectedIndex].title}}</span>
+</button>
+<mat-menu #menu="matMenu">
+  @for (language of languages(); track language.value; let index = $index) {
+    <button mat-menu-item
+            (click)="selectLanguage(index)">
+      {{language.title}}
+    </button>
+  }
+</mat-menu>

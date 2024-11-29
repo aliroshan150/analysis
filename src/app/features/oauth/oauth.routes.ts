@@ -19,7 +19,7 @@ export const oauthRoutes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'login',
+        redirectTo: 'sign-up',
       },
     ]
   }

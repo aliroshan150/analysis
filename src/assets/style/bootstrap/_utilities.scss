@@ -1,0 +1,76 @@
+@use "../variable" as variables;
+@use "sass:map" as map;
+@import "bootstrap/scss/utilities";
+
+$utilities: (
+  map.merge(
+      $utilities,
+      (
+        "background-color": (
+          property: background-color,
+          class: bg,
+          local-vars: (
+            "bg-opacity": 1
+          ),
+          values: map.merge(
+              variables.$utilities-bg-colors,
+              (
+                "transparent": transparent,
+                "white": variables.$white,
+                "black": variables.$black,
+                "body-secondary": rgba(var(--#{variables.$prefix}secondary-bg-rgb), var(--#{variables.$prefix}bg-opacity)),
+                "body-tertiary": rgba(var(--#{variables.$prefix}tertiary-bg-rgb), var(--#{variables.$prefix}bg-opacity)),
+              )
+          )
+        ),
+        "cursor": (
+          responsive: true,
+          property: cursor,
+          values: (
+            pointer: pointer,
+            not-allowed: not-allowed,
+            text: text,
+          )
+        ),
+        "aspect-ratio": (
+          responsive: true,
+          property: aspect-ratio,
+          values: variables.$aspect-values
+        ),
+        "text-align": (
+          responsive: true,
+          property: text-align,
+          class: text,
+          values: (
+            start: start,
+            end: end,
+            center: center,
+          )
+        ),
+        "margin-end": (
+          responsive: true,
+          property: margin-inline-end,
+          class: me,
+          values: map.merge(variables.$spacers, (auto: auto))
+        ),
+        "margin-start": (
+          responsive: true,
+          property: margin-inline-start,
+          class: ms,
+          values: map.merge(variables.$spacers, (auto: auto))
+        ),
+        "padding-end": (
+          responsive: true,
+          property: padding-inline-end,
+          class: pe,
+          values: map.merge(variables.$spacers, (auto: auto))
+        ),
+        "padding-start": (
+          responsive: true,
+          property: padding-inline-start,
+          class: ps,
+          values: map.merge(variables.$spacers, (auto: auto))
+        ),
+      )
+  )
+);
