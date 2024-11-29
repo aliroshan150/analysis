@@ -5,12 +5,15 @@ import {SignUpInterface} from '@oauth/types';
 import {CrudBaseService} from '@core/base-class/crud-base.service';
 import {SignUp} from '@oauth-models/sign-up';
 import {map, tap} from 'rxjs';
-import {FormsModule, NgForm} from '@angular/forms';
+import {FormsModule, NgForm, NgModel} from '@angular/forms';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatButton} from '@angular/material/button';
 import {SignUpFormInputComponent} from '@oauth/components';
 import {LocalStorageService} from '@shared/services';
 import {StorageKeyEnum} from '@shared-enums/storage-key.enum';
+import {MatError} from '@angular/material/form-field';
+import {InputTypeEnum} from '@oauth-models/enums/input-type.enum';
+import {slideDown} from '@shared-models/animations';
 
 @Component({
   selector: 'app-sign-up',
@@ -19,10 +22,12 @@ import {StorageKeyEnum} from '@shared-enums/storage-key.enum';
     MatCard,
     MatCardContent,
     MatButton,
-    forwardRef(() => SignUpFormInputComponent)
+    forwardRef(() => SignUpFormInputComponent),
+    MatError
   ],
   templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.scss'
+  styleUrl: './sign-up.component.scss',
+  animations: [slideDown]
 })
 export class SignUpComponent
   extends BaseComponentClass
@@ -72,7 +77,9 @@ export class SignUpComponent
       })
   }
 
-  updateInput(newField: any, index: number) {
+  updateInput(newField: any, index: number, modelRef: NgModel) {
     this.signUpForm.form.fields[index] = newField;
   }
+
+  protected readonly InputTypeEnum = InputTypeEnum;
 }

@@ -1,6 +1,6 @@
 @switch (formField().type) {
   @case (InputTypes.TEXT) {
-    <mat-form-field class="d-block text-black"
+    <mat-form-field class="d-block"
                     [matTooltip]="formField().description"
                     matTooltipPosition="before">
       <mat-label>{{ formField().title }}</mat-label>
@@ -14,20 +14,10 @@
              [required]="formField().required ?? false"
              [(ngModel)]="formValue"
              (ngModelChange)="handleChange(inputRef)">
-      @if (ngForm.errors?.[id()]) {
-        <small class="text-danger">
-          {{ngForm.errors![id()]}}
-        </small>
-      }
-      @if ((ngForm.submitted || inputRef.dirty) && inputRef.invalid) {
-        <mat-error>
-          {{formField().errorMessage}}
-        </mat-error>
-      }
     </mat-form-field>
   }
   @case (InputTypes.NEW_PASSWORD) {
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center mb-3 custom-error">
       <mat-form-field class="flex-grow-1"
                       [matTooltip]="formField().description"
                       matTooltipPosition="before">
@@ -40,7 +30,7 @@
                [pattern]="formField().regex ? formField().regex! : ''"
                [required]="formField().required ?? false"
                [(ngModel)]="formValue"
-               (ngModelChange)="handleChange(passwordRef)">
+               (ngModelChange)="handleChange(passwordRef); checkRepeatPassword(passwordRef)">
         <button
           mat-icon-button
           matSuffix
@@ -54,8 +44,10 @@
                     [fontIcon]="hide() ? 'visibility_off' : 'visibility'"></mat-icon>
         </button>
 
-        @if ((ngForm.submitted || passwordRef.dirty) && passwordRef.invalid) {
-          <mat-error>
+        @if ((ngForm.submitted || passwordRef.dirty) && (passwordRef.invalid || (
+          passwordRef.invalid && passwordRef.errors?.['notSameWithPassword']
+        ))) {
+          <mat-error @slideDown>
             {{ formField().errorMessage }}
           </mat-error>
         }
@@ -68,7 +60,7 @@
       </mat-icon>
     </div>
     @if ($any(formField())['showConfirmPassword']) {
-      <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center custom-error">
         <mat-form-field class="flex-grow-1"
                         [matTooltip]="formField().description"
                         matTooltipPosition="before">
@@ -84,7 +76,7 @@
                  [pattern]="formField().regex ? formField().regex! : ''"
                  [required]="formField().required ?? false"
                  [(ngModel)]="repeatPassword"
-                 (ngModelChange)="checkRepeatPassword(repeatPasswordRef)">
+                 (ngModelChange)="checkRepeatPassword(passwordRef, repeatPasswordRef)">
           <button
             mat-icon-button
             matSuffix
@@ -97,10 +89,8 @@
                       class="fs-5"
                       [fontIcon]="hideRepeat() ? 'visibility_off' : 'visibility'"></mat-icon>
           </button>
-          @if ((ngForm.submitted || repeatPasswordRef.dirty) && (repeatPasswordRef.invalid || (
-            passwordRef.invalid && repeatPasswordRef.errors?.['notSameWithPassword']
-          ))) {
-            <mat-error>
+          @if ((ngForm.submitted || repeatPasswordRef.dirty) && (repeatPasswordRef.invalid)) {
+            <mat-error @slideDown>
               {{ repeatPasswordRef?.errors?.['notSameWithPassword'] ?? formField().errorMessage }}
             </mat-error>
           }

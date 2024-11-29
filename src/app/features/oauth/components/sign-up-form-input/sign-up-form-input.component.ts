@@ -38,8 +38,6 @@ import {MatIcon} from '@angular/material/icon';
     MatIconButton,
     MatIcon,
     MatSuffix,
-
-
   ],
   templateUrl: './sign-up-form-input.component.html',
   styleUrl: './sign-up-form-input.component.scss',
@@ -51,7 +49,7 @@ import {MatIcon} from '@angular/material/icon';
     },
     {
       provide: NG_ASYNC_VALIDATORS,
-      useClass: SignUpFormInputComponent,
+      useExisting: forwardRef(() => SignUpFormInputComponent),
       multi: true,
     },
     {
@@ -88,6 +86,7 @@ export class SignUpFormInputComponent<
               this.ngForm.form?.setErrors({
                 [key]: value,
               });
+              this.validate(this.ngForm.controls[key]);
             }
           });
       }
@@ -139,26 +138,37 @@ export class SignUpFormInputComponent<
   }
 
   validate(control: AbstractControl): Promise<ValidationErrors | null> {
-    this.#validationErrors.set(null);
     const newValue: SignUpFormField<FormFieldType> = control?.value;
     return new Promise((resolve, reject) => {
+      this.#validationErrors.set(this.ngForm.errors?.[this.id()] ? {
+        [newValue.name]: this.ngForm.errors?.[this.id()]
+      } : null);
+      if (this.#validationErrors() != null) {
+        control.setErrors(this.#validationErrors())
+      }
       if (newValue.type === InputTypeEnum.NEW_PASSWORD) {
-        console.log(newValue);
       }
-      if (newValue.formValue.value) {
-      }
-      if (newValue?.regex && new RegExp(newValue.regex!)?.test(newValue.formValue.value)) {
-        console.log('pattern error')
+      if (newValue?.regex && !(newValue.regex instanceof RegExp ? newValue.regex : new RegExp(newValue.regex))?.test(newValue.formValue.value)) {
+        this.#validationErrors.update(validationErrors => ({
+          ...validationErrors,
+          pattern: {
+            requiredPattern: newValue.regex,
+            actualValue: newValue.formValue.value,
+          }
+        }));
       }
       resolve(this.#validationErrors());
     })
   }
 
-  checkRepeatPassword(repeatPasswordRef: NgModel) {
+  checkRepeatPassword(passwordRef: NgModel, repeatPasswordRef?: NgModel) {
     if (this.formField().formValue.value !== this.repeatPassword) {
-      repeatPasswordRef.control.setErrors({
+      repeatPasswordRef?.control.setErrors({
         notSameWithPassword: $localize`:@@notSameWithPassword:تکرار رمز عبور یکسان نمی باشد`,
       });
+    } else {
+      passwordRef.control.setErrors(null);
+      repeatPasswordRef?.control.setErrors(null);
     }
   }
 }

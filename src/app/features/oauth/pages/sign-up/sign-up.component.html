@@ -24,9 +24,18 @@
                                                   [formField]="formField"
                                                   [fieldsError]="signUpForm.fieldErrors"
                                                   [ngModel]="formField"
-                                                  (ngModelChange)="updateInput($event, index)"
-                                                  [pattern]="formField.regex ?? ''"
+                                                  #formFieldRef="ngModel"
+                                                  (ngModelChange)="updateInput($event, index, formFieldRef)"
                                                   [required]="formField.required ?? false"></app-sign-up-form-input>
+                          @if (formRef.invalid && formRef.errors?.[formField.name]) {
+                            <mat-error @slideDown>
+                              <small>{{formRef.errors?.[formField.name]}}</small>
+                            </mat-error>
+                          } @else if (formField.type !== InputTypeEnum.NEW_PASSWORD && ((formRef.submitted || formFieldRef.dirty) && formFieldRef.invalid)) {
+                            <mat-error @slideDown>
+                              <small>{{ formField.errorMessage }}</small>
+                            </mat-error>
+                          }
                         </div>
                       }
                     }
