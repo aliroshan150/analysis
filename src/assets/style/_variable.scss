@@ -70,3 +70,8 @@ $font-sizes: (
   40: $font-size-base * 9.75,
   41: $font-size-base * 10,
 );
+
+:root {
+  --mdc-filled-text-field-container-color: whitesmoke;
+  --mat-sys-corner-full: 4px;
+}

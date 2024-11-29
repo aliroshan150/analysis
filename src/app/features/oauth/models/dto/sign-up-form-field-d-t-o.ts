@@ -1,6 +1,8 @@
 import {ApiDTO} from '@core/dto/core';
 import {SignUpFormFieldInterface} from '@oauth/types';
 import {InputTypeEnum} from '@oauth-models/enums/input-type.enum';
+import {SignUpFieldSubmit} from '@oauth-models/sign-up-field-submit';
+import {DescriptionShowTypeEnum} from '@oauth-models/enums/description-show-type.enum';
 
 export abstract class SignUpFormFieldDTO<InputType extends InputTypeEnum = InputTypeEnum>
   extends ApiDTO<SignUpFormFieldInterface<InputType>>
@@ -12,10 +14,14 @@ export abstract class SignUpFormFieldDTO<InputType extends InputTypeEnum = Input
   description: string = '';
   errorMessage: string = '';
   required?: boolean;
-  regex?: RegExp;
+  regex?: RegExp | string;
   minLength?: number;
   maxLength?: number;
   type?: InputType;
+  descriptionShowType?: DescriptionShowTypeEnum;
+  info: string = '';
+  showConfirmPassword?: boolean;
+  formValue: SignUpFieldSubmit = new SignUpFieldSubmit();
 
   protected constructor(partial?: Partial<SignUpFormFieldInterface<InputType>>, isDummy: boolean = false) {
     super(isDummy);
@@ -24,6 +30,12 @@ export abstract class SignUpFormFieldDTO<InputType extends InputTypeEnum = Input
 
   override resetByPartial(partial?: Partial<SignUpFormFieldInterface<InputType>>): void {
     super.resetByPartial(partial);
+    if ((<any>partial)?.name) {
+      this.formValue.resetByPartial({
+        name: (<any>partial)?.name ?? '',
+        value: ''
+      });
+    }
   }
 
   override getInterfaceObject(): Partial<SignUpFormFieldInterface<InputType>> {
@@ -50,6 +62,9 @@ export abstract class SignUpFormFieldDTO<InputType extends InputTypeEnum = Input
       minLength: this.minLength ?? undefined,
       maxLength: this.maxLength ?? undefined,
       type: this.type ?? undefined,
+      descriptionShowType: this.descriptionShowType ?? undefined,
+      info: this.info ?? undefined,
+      showConfirmPassword: this.showConfirmPassword ?? undefined,
     };
   }
 
@@ -61,15 +76,10 @@ export abstract class SignUpFormFieldDTO<InputType extends InputTypeEnum = Input
     return this.type === InputTypeEnum.NEW_PASSWORD;
   }
 
-  // override getApiDTO(force?: boolean): any {
-  //   const DTO = super.getApiDTO(force);
-  //   if (this.isPasswordInput) {
-  //     console.log(this.name + ' is password');
-  //   }
-  //   if (this.isTextInput) {
-  //     console.log(this.name + ' is text');
-  //   }
-  //   return DTO;
-  // }
+  override getApiDTO(force?: boolean): any {
+    const DTO: any = {};
+    DTO[this.formValue.name] = this.formValue.value;
+    return DTO;
+  }
 
 }

@@ -1,1 +1,108 @@
-<p>sign-up-form-input works!</p>
+@switch (formField().type) {
+  @case (InputTypes.TEXT) {
+    <mat-form-field class="d-block text-black"
+                    [matTooltip]="formField().description"
+                    matTooltipPosition="before">
+      <mat-label>{{ formField().title }}</mat-label>
+      <input [id]="id() + '-text'"
+             [name]="id() + '-text'"
+             type="text"
+             matInput
+             #inputRef="ngModel"
+             [pattern]="formField().regex ? formField().regex! : ''"
+             [required]="formField().required ?? false"
+             [(ngModel)]="formValue"
+             (ngModelChange)="handleChange(inputRef)">
+      @if ((ngForm.submitted || inputRef.dirty) && inputRef.invalid) {
+        <mat-error @slideDown>
+          {{ formField().errorMessage }}
+        </mat-error>
+      }
+    </mat-form-field>
+  }
+  @case (InputTypes.NEW_PASSWORD) {
+    <div class="d-flex align-items-center">
+      <mat-form-field class="flex-grow-1"
+                      [matTooltip]="formField().description"
+                      matTooltipPosition="before">
+        <mat-label>{{ formField().title }}</mat-label>
+        <input [id]="id() + '-password'"
+               [name]="id() + '-password'"
+               [type]="hide() ? 'password' : 'text'"
+               matInput
+               #passwordRef="ngModel"
+               [pattern]="formField().regex ? formField().regex! : ''"
+               [required]="formField().required ?? false"
+               [(ngModel)]="formValue"
+               (ngModelChange)="handleChange(passwordRef)">
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          (click)="toggleHide($event)"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide()">
+          <mat-icon aria-hidden="false"
+                    aria-label="Eye icon"
+                    class="fs-5"
+                    [fontIcon]="hide() ? 'visibility_off' : 'visibility'"></mat-icon>
+        </button>
+
+        @if ((ngForm.submitted || passwordRef.dirty) && passwordRef.invalid) {
+          <mat-error>
+            {{ formField().errorMessage }}
+          </mat-error>
+        }
+      </mat-form-field>
+      <mat-icon aria-hidden="false"
+                aria-label="info"
+                class="mb-4"
+                [matTooltip]="formField().info"
+                fontIcon="info">
+      </mat-icon>
+    </div>
+    @if ($any(formField())['showConfirmPassword']) {
+      <div class="d-flex align-items-center">
+        <mat-form-field class="flex-grow-1"
+                        [matTooltip]="formField().description"
+                        matTooltipPosition="before">
+          <mat-label>
+            <span i18n="@@repeated">تکرار</span>
+            <span class="ms-1">{{ formField().title }}</span>
+          </mat-label>
+          <input [id]="id() + '-repeat-password'"
+                 [name]="id() + '-repeat-password'"
+                 [type]="hideRepeat() ? 'password' : 'text'"
+                 matInput
+                 #repeatPasswordRef="ngModel"
+                 [pattern]="formField().regex ? formField().regex! : ''"
+                 [required]="formField().required ?? false"
+                 [(ngModel)]="repeatPassword"
+                 (ngModelChange)="checkRepeatPassword(repeatPasswordRef)">
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="toggleHideRepeat($event)"
+            [attr.aria-label]="'Hide Repeat password'"
+            [attr.aria-pressed]="hideRepeat()">
+            <mat-icon aria-hidden="false"
+                      aria-label="Eye icon"
+                      class="fs-5"
+                      [fontIcon]="hideRepeat() ? 'visibility_off' : 'visibility'"></mat-icon>
+          </button>
+          @if ((ngForm.submitted || repeatPasswordRef.dirty) && (repeatPasswordRef.invalid || (
+            passwordRef.invalid && repeatPasswordRef.errors?.['notSameWithPassword']
+          ))) {
+            <mat-error>
+              {{ repeatPasswordRef?.errors?.['notSameWithPassword'] ?? formField().errorMessage }}
+            </mat-error>
+          }
+        </mat-form-field>
+      </div>
+    }
+  }
+  @default {
+    Not Provided Input
+  }
+}

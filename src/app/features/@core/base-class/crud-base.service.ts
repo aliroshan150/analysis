@@ -1,5 +1,5 @@
-import {inject, Inject, Injectable, InjectionToken} from '@angular/core';
-import {map, Observable} from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
 import {HttpResponse} from '@angular/common/http';
 import {CoreBaseService} from '@core/base-class/core-base.service';
 import {PageResponseInterface, PaginationInterface} from '@core/types';

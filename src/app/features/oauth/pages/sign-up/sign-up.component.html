@@ -1,34 +1,53 @@
 @defer {
-    <mat-grid-list class="sign-up-bg"
-                   cols="24"
-                   rowHeight="100%">
-      <mat-grid-tile colspan="7"></mat-grid-tile>
-      <mat-grid-tile colspan="10">
-        <mat-card class="w-100 ">
-          <mat-card-content>
-            @if (signUpResource.error()) {
-              Error in loading form
-            } @else if (signUpResource.isLoading()) {
-              loading inputs
-            } @else if (signUpResource.hasValue()) {
-              <h1 class="text-center fs-7">{{signUpForm.form.title}}</h1>
-              <form [id]="signUpForm.form.name"
-                    [name]="signUpForm.form.name"
-                    (ngSubmit)="submitForm()">
+  <div class="sign-up-bg">
+    <div class="container h-100">
+      <div class="row h-100 align-items-center justify-content-center">
+        <div class="col-md-5">
+          <mat-card class="w-100 my-4">
+            <mat-card-content>
+              @if (signUpResource.error()) {
+                Error in loading form
+              } @else if (signUpResource.isLoading()) {
+                loading inputs
+              } @else if (signUpResource.hasValue()) {
+                <h1 class="text-center fs-7">{{signUpForm.form.title}}</h1>
+                <form [id]="signUpForm.form.name"
+                      [name]="signUpForm.form.name"
+                      (ngSubmit)="submitForm()">
+                  @if (signUpForm.form.fields.length) {
+                    @for (formField of signUpForm.form.fields; track index; let index = $index) {
+                      @if (!!formField) {
+                        <div class="mb-3">
+                          <app-sign-up-form-input [id]="formField.name + '-' + index"
+                                                  [name]="formField.name + '-' + index"
+                                                  [formField]="formField"
+                                                  [ngModel]="formField"
+                                                  (ngModelChange)="updateInput($event, index)"
+                                                  [pattern]="formField.regex ?? ''"
+                                                  [required]="formField.required ?? false"></app-sign-up-form-input>
+                        </div>
+                      }
+                    }
+                  } @else {
+                    <div class="alert alert-warning" i18n="@@formFieldsAreEmpty">
+                      فرم هیج فیلدی ندارد
+                    </div>
+                  }
 
-                <div class="mt-5">
-                  <button mat-stroked-button
-                          type="submit"
-                          class="w-100"
-                          [attr.form]="signUpForm.form.name">
-                    {{signUpForm.form.submitLabel}}
-                  </button>
-                </div>
-              </form>
-            }
-          </mat-card-content>
-        </mat-card>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="7"></mat-grid-tile>
-    </mat-grid-list>
+                  <div class="mt-5">
+                    <button mat-flat-button
+                            type="submit"
+                            class="w-100"
+                            [attr.form]="signUpForm.form.name">
+                      {{signUpForm.form.submitLabel}}
+                    </button>
+                  </div>
+                </form>
+              }
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
 }

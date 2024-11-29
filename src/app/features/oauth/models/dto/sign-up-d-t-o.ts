@@ -35,4 +35,12 @@ export abstract class SignUpDTO
     };
   }
 
+  override getApiDTO(force?: boolean): any {
+    const DTO: any = {}
+    Object.entries(this.form.fields).forEach(([key, value]) => {
+      DTO[value.formValue.name] = value.formValue.value;
+    });
+    return DTO;
+  }
+
 }

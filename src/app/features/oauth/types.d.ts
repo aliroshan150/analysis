@@ -21,7 +21,7 @@ export type SharedInputType<InputType extends InputTypeEnum = InputTypeEnum.TEXT
   description: string;
   errorMessage: string;
   required?: boolean;
-  regex: RegExp;
+  regex: RegExp | string;
   minLength?: number;
   maxLength?: number;
   type: InputType;
@@ -44,8 +44,15 @@ export type SignUpFormFieldType<InputType = InputTypeEnum> =
     Type extends InputTypeEnum.TEXT ? TextInputType :
       Type extends InputTypeEnum.NEW_PASSWORD ? PasswordInputType : never : never;
 
+export interface FieldMap {
+  [InputTypeEnum.TEXT]: TextInputType;
+  [InputTypeEnum.NEW_PASSWORD]: PasswordInputType;
+}
+
+export type SignUpFormFieldMap<InputType extends InputTypeEnum> = FieldMap[InputType];
+
 export interface SignUpFormFieldInterface<InputType extends InputTypeEnum = InputTypeEnum>
-  extends SignUpFormFieldType<InputType> {
+  extends SignUpFormFieldMap<InputType> {
 }
 
 export interface SignUpFormInterface {
@@ -67,4 +74,9 @@ export interface SignUpInterface {
       FieldType extends SignUpFormFieldType<InputTypeEnum.TEXT> ? FieldType['name'] : never
   ) : never;
   errors: Array<any>;
+}
+
+export interface SignUpFieldSubmitInterface {
+  name: string;
+  value: string;
 }
