@@ -4,11 +4,13 @@ import {rxResource, takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {SignUpInterface} from '@oauth/types';
 import {CrudBaseService} from '@core/base-class/crud-base.service';
 import {SignUp} from '@oauth-models/sign-up';
-import {tap} from 'rxjs';
-import {FormsModule} from '@angular/forms';
+import {map, tap} from 'rxjs';
+import {FormsModule, NgForm} from '@angular/forms';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatButton} from '@angular/material/button';
 import {SignUpFormInputComponent} from '@oauth/components';
+import {LocalStorageService} from '@shared/services';
+import {StorageKeyEnum} from '@shared-enums/storage-key.enum';
 
 @Component({
   selector: 'app-sign-up',
@@ -27,13 +29,18 @@ export class SignUpComponent
   implements OnInit {
 
   readonly #service: CrudBaseService = inject(CrudBaseService);
+  readonly #storageService: LocalStorageService = inject(LocalStorageService);
   signUpForm: SignUp = new SignUp();
 
-  signUpResource = rxResource<SignUpInterface, null>({
+  signUpResource = rxResource<Partial<SignUpInterface>, null>({
     request: () => null,
-    loader: () => this.#service.get<SignUpInterface>('sign-up')
+    loader: () => this.#service.getByResponse<Partial<SignUpInterface>>('sign-up')
       .pipe(
         takeUntilDestroyed(this.destroyRef),
+        map(response => {
+          this.#storageService.setItem(StorageKeyEnum.API_CALL_TOKEN, response.headers.get('x-flow-token'));
+          return (response?.body ?? {}) as Partial<SignUpInterface>;
+        }),
         tap({
           next: response => {
             this.signUpForm.resetByPartial(response);
@@ -48,7 +55,7 @@ export class SignUpComponent
   ngOnInit(): void {
   }
 
-  submitForm(): void {
+  submitForm(formRef: NgForm): void {
     this.#service
       .post('sign-up', this.signUpForm.getApiDTO())
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -58,6 +65,9 @@ export class SignUpComponent
         },
         error: error => {
           console.log('catch errors, ', error);
+          if (error?.error?.fieldErrors) {
+            this.signUpForm.fieldErrors = error?.error?.fieldErrors;
+          }
         }
       })
   }

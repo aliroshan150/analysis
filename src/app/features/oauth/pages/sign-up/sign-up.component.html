@@ -13,14 +13,16 @@
                 <h1 class="text-center fs-7">{{signUpForm.form.title}}</h1>
                 <form [id]="signUpForm.form.name"
                       [name]="signUpForm.form.name"
-                      (ngSubmit)="submitForm()">
+                      #formRef="ngForm"
+                      (ngSubmit)="submitForm(formRef)">
                   @if (signUpForm.form.fields.length) {
                     @for (formField of signUpForm.form.fields; track index; let index = $index) {
                       @if (!!formField) {
                         <div class="mb-3">
-                          <app-sign-up-form-input [id]="formField.name + '-' + index"
-                                                  [name]="formField.name + '-' + index"
+                          <app-sign-up-form-input [id]="formField.name"
+                                                  [name]="formField.name"
                                                   [formField]="formField"
+                                                  [fieldsError]="signUpForm.fieldErrors"
                                                   [ngModel]="formField"
                                                   (ngModelChange)="updateInput($event, index)"
                                                   [pattern]="formField.regex ?? ''"

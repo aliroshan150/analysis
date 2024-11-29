@@ -9,13 +9,19 @@
              type="text"
              matInput
              #inputRef="ngModel"
+             autocomplete="off"
              [pattern]="formField().regex ? formField().regex! : ''"
              [required]="formField().required ?? false"
              [(ngModel)]="formValue"
              (ngModelChange)="handleChange(inputRef)">
+      @if (ngForm.errors?.[id()]) {
+        <small class="text-danger">
+          {{ngForm.errors![id()]}}
+        </small>
+      }
       @if ((ngForm.submitted || inputRef.dirty) && inputRef.invalid) {
-        <mat-error @slideDown>
-          {{ formField().errorMessage }}
+        <mat-error>
+          {{formField().errorMessage}}
         </mat-error>
       }
     </mat-form-field>

@@ -1,14 +1,15 @@
-import {Component, forwardRef, inject, input, signal, WritableSignal} from '@angular/core';
+import {Component, effect, forwardRef, inject, input, signal, WritableSignal} from '@angular/core';
 import {SignUpFormField} from '@oauth-models/sign-up-form-field';
 import {InputTypeEnum} from '@oauth-models/enums/input-type.enum';
 import {
   AbstractControl,
   AsyncValidator,
-  ControlValueAccessor, FormControl,
+  ControlValueAccessor,
   FormsModule,
   NG_ASYNC_VALIDATORS,
   NG_VALUE_ACCESSOR,
-  NgForm, NgModel,
+  NgForm,
+  NgModel,
   ValidationErrors
 } from '@angular/forms';
 import {SignUpFormFieldInterface} from '@oauth/types';
@@ -37,6 +38,8 @@ import {MatIcon} from '@angular/material/icon';
     MatIconButton,
     MatIcon,
     MatSuffix,
+
+
   ],
   templateUrl: './sign-up-form-input.component.html',
   styleUrl: './sign-up-form-input.component.scss',
@@ -66,6 +69,7 @@ export class SignUpFormInputComponent<
   id = input.required<string>();
   disabled = input<boolean | string>(false);
   formField = input.required<SignUpFormField<FormFieldType>>();
+  fieldsError = input<{ [key: string]: string }>();
   readonly #validationErrors: WritableSignal<ValidationErrors | null> = signal(null);
   ngForm: NgForm = inject(NgForm);
   isDisabled: boolean = false;
@@ -73,6 +77,22 @@ export class SignUpFormInputComponent<
   hideRepeat: WritableSignal<boolean> = signal(true);
   formValue: string = '';
   repeatPassword: string = '';
+
+  constructor() {
+    effect(() => {
+      if (this.fieldsError() != null) {
+        Object.entries(this.fieldsError()!)
+          .forEach(([key, value]) => {
+            if (this.formField()?.name === key) {
+              // this.extraErrors = value;
+              this.ngForm.form?.setErrors({
+                [key]: value,
+              });
+            }
+          });
+      }
+    });
+  }
 
   get InputTypes(): typeof InputTypeEnum {
     return InputTypeEnum;
@@ -137,7 +157,7 @@ export class SignUpFormInputComponent<
   checkRepeatPassword(repeatPasswordRef: NgModel) {
     if (this.formField().formValue.value !== this.repeatPassword) {
       repeatPasswordRef.control.setErrors({
-        notSameWithPassword: $localize `:@@notSameWithPassword:تکرار رمز عبور یکسان نمی باشد`,
+        notSameWithPassword: $localize`:@@notSameWithPassword:تکرار رمز عبور یکسان نمی باشد`,
       });
     }
   }

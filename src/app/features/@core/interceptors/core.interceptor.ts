@@ -3,7 +3,8 @@ import {environment} from '@environments/environment';
 import {OAuthService} from '@oauth/services';
 import {inject} from '@angular/core';
 import {catchError, throwError} from 'rxjs';
-import {LanguageService} from '@shared/services';
+import {LanguageService, LocalStorageService} from '@shared/services';
+import {StorageKeyEnum} from '@shared-enums/storage-key.enum';
 
 
 export const API_URL = new HttpContextToken<string>(() => '');
@@ -23,11 +24,13 @@ export const coreInterceptor: HttpInterceptorFn = (req, next) => {
 
   const authService: OAuthService = inject(OAuthService);
   const languageService: LanguageService = inject(LanguageService);
+  const storageService: LocalStorageService = inject(LocalStorageService);
   let apiReq = req;
 
   const requestParams: any = {
     url: apiReq.url,
   };
+  let headers: any = {};
   if (!req.headers.get('skip') && apiUrl) {
     requestParams.url = `${apiUrl}${apiReq.url}`;
   }
@@ -36,11 +39,20 @@ export const coreInterceptor: HttpInterceptorFn = (req, next) => {
     //   "Authorization": authService.apiToken()
     // })
   }
-  if (languageService.currentLanguage?.value) {
-    requestParams.headers = new HttpHeaders({
-      "Accept-Language": languageService.currentLanguage?.value
-    })
+  if (apiReq.method === 'POST' && storageService.has(StorageKeyEnum.API_CALL_TOKEN)) {
+    headers = {
+      "X-Flow-Token": storageService.getItem(StorageKeyEnum.API_CALL_TOKEN)!,
+    };
   }
+  if (languageService.currentLanguage?.value) {
+    headers = {
+      ...(headers ?? {}),
+      "Accept-Language": languageService.currentLanguage?.value,
+    }
+  }
+  requestParams.headers = new HttpHeaders({
+    ...headers
+  });
   apiReq = req.clone(requestParams);
   return next(apiReq)
     .pipe(
