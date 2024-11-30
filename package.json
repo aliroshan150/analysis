@@ -3,9 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --port=4200 & npm run start:fa",
+    "start:en": "ng serve --configuration=en --port 4200",
+    "start:fa": "ng serve --configuration=fa --port 3200 --host 0.0.0.0",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "watch": "ng build --watch --configuration fa",
     "test": "ng test"
   },
   "private": true,

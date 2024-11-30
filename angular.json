@@ -13,10 +13,20 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "fa": {
+            "translation": "src/locale/messages.fa.xlf"
+          }
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "localize": true,
+            "aot": true,
             "outputPath": "dist/analysis",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -85,6 +95,13 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "fa": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "localize": ["fa"],
+              "outputPath": "dist/fa"
             }
           },
           "defaultConfiguration": "production"
@@ -100,6 +117,9 @@
             },
             "development": {
               "buildTarget": "analysis:build:development"
+            },
+            "fa": {
+              "buildTarget": "analysis:build:fa"
             }
           },
           "defaultConfiguration": "development"

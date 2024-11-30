@@ -6,14 +6,14 @@ import {CrudBaseService} from '@core/base-class/crud-base.service';
 import {SignUp} from '@oauth-models/sign-up';
 import {map, tap} from 'rxjs';
 import {FormsModule, NgForm, NgModel} from '@angular/forms';
-import {MatCard, MatCardContent} from '@angular/material/card';
-import {MatButton} from '@angular/material/button';
-import {SignUpFormInputComponent} from '@oauth/components';
 import {LocalStorageService} from '@shared/services';
 import {StorageKeyEnum} from '@shared-enums/storage-key.enum';
-import {MatError} from '@angular/material/form-field';
 import {InputTypeEnum} from '@oauth-models/enums/input-type.enum';
 import {slideDown} from '@shared-models/animations';
+import {MatCard, MatCardContent} from '@angular/material/card';
+import {SignUpFormInputComponent} from '@oauth/components';
+import {MatButton} from '@angular/material/button';
+import {MatError} from '@angular/material/form-field';
 
 @Component({
   selector: 'app-sign-up',
